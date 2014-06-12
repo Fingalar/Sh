@@ -6,7 +6,7 @@
 /*   By: tmertz <tmertz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/26 19:32:08 by tmertz            #+#    #+#             */
-/*   Updated: 2014/03/27 04:24:32 by tmertz           ###   ########.fr       */
+/*   Updated: 2014/06/02 16:07:45 by tmertz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,5 +43,5 @@ int		ft_nofile(char *file)
 {
 	ft_putstr_fd(file, 2);
 	ft_putendl_fd(": No such file or directory.", 2);
-	return (0);
+	return (-1);
 }

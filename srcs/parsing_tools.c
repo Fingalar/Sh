@@ -6,7 +6,7 @@
 /*   By: tmertz <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/02/27 19:33:01 by tmertz            #+#    #+#             */
-/*   Updated: 2014/03/27 19:01:58 by jburet           ###   ########.fr       */
+/*   Updated: 2014/05/27 15:16:01 by tmertz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,23 +41,15 @@ t_node		*ft_add_node(t_node *node, t_elem *elem, int dir)
 	return (new_node);
 }
 
-t_node		*ft_add_redirection_node(t_node *node, t_elem *elem, int dir)
+t_node		*ft_add_redirection_node(t_node *node, t_elem *elem)
 {
 	t_node		*new_node;
 	char		*value;
 
 	value = ft_strdup(((t_token *)elem->value)->lexen);
 	new_node = ft_tree_new(value, 2);
-	if (dir == 1)
-	{
-		node->right = new_node;
-		new_node->parent = node;
-	}
-	else
-	{
-		node->left = new_node;
-		new_node->parent = node;
-	}
+	node->right = new_node;
+	new_node->parent = node;
 	return (new_node);
 }
 

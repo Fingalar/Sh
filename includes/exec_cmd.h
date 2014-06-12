@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmertz <tmertz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nyguel <nyguel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/16 14:26:53 by tmertz            #+#    #+#             */
-/*   Updated: 2014/03/27 05:04:45 by tmertz           ###   ########.fr       */
+/*   Updated: 2014/06/04 18:55:38 by nyguel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@
 # include "ft_hash.h"
 # include "builtins.h"
 # include "cd.h"
+# include "read.h"
+# include "builtin_exec.h"
 
 int		ft_check_cmd(t_node *node, t_sh *sh);
 int		ft_exec_cmd(t_cmd *cmd, char *path, t_sh *sh);

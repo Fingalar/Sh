@@ -6,7 +6,7 @@
 /*   By: tmertz <tmertz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/13 14:38:52 by tmertz            #+#    #+#             */
-/*   Updated: 2014/05/23 17:31:39 by tmertz           ###   ########.fr       */
+/*   Updated: 2014/05/24 18:21:47 by tmertz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ void	ft_exec_line(t_tree *tree, t_sh *sh)
 {
 	pid_t	process;
 
+	if (sh == NULL)
+		return ;
 	if (ft_simple_line(tree, sh))
 		return ;
 	else

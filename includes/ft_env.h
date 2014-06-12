@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmertz <tmertz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nyguel <nyguel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/27 05:24:00 by tmertz            #+#    #+#             */
-/*   Updated: 2014/03/27 20:48:00 by jburet           ###   ########.fr       */
+/*   Updated: 2014/06/06 20:02:12 by nyguel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,7 @@ int				ft_unsetenv(t_sh *sh, t_cmd *cmd);
 int				ft_unsetvar(t_sh *sh, char *name);
 void			ft_env(t_sh *sh, t_cmd *cmd);
 int				ft_export(t_sh *sh, char *name);
+void			ft_cpy_pwd(t_sh *sh);
+void			ft_set_loc(t_sh *sh);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmaublan <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: nyguel <nyguel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/10 15:19:28 by cmaublan          #+#    #+#             */
-/*   Updated: 2014/05/12 15:04:19 by tmertz           ###   ########.fr       */
+/*   Updated: 2014/06/12 18:01:02 by tmertz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,14 @@
 #include "../includes/structs.h"
 #include "../includes/history.h"
 #include "../includes/config.h"
+#include "../includes/singleton.h"
 
 t_sh		*ft_make_sh(t_sh *sh, char **environ)
 {
 	int		i;
 
 	i = 0;
-	sh = (t_sh *)malloc(sizeof(t_sh));
+	sh = get_sh();
 	if (!sh || !environ[0])
 		return (NULL);
 	while (environ[i] != NULL)
@@ -40,8 +41,11 @@ t_sh		*ft_make_sh(t_sh *sh, char **environ)
 	}
 	sh->paths = (t_list **)ft_memalloc(sizeof(t_list *) * SIZE_TABLE + 1);
 	sh->history = recup_hist(sh);
+	sh->var = ft_list_init(sh->var);
+	ft_cpy_pwd(sh);
 	ft_set_paths(sh);
 	create_file_config(sh);
+	ft_set_loc(sh);
 	return (sh);
 }
 

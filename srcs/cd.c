@@ -6,7 +6,7 @@
 /*   By: tmertz <tmertz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/27 02:01:53 by tmertz            #+#    #+#             */
-/*   Updated: 2014/04/27 15:53:59 by tmertz           ###   ########.fr       */
+/*   Updated: 2014/05/27 15:45:40 by tmertz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int		ft_change_directory(t_sh *sh, t_cmd *cmd)
 				if (stats.st_mode & S_IRUSR)
 				{
 					chdir(cmd->args[1]);
-					return (ft_update_env(sh->env, cmd->args[1]));
+					return (ft_update_env(sh, cmd->args[1]));
 				}
 				else
 					return (ft_puterror_nopermission(cmd->args[1]));
@@ -38,10 +38,10 @@ int		ft_change_directory(t_sh *sh, t_cmd *cmd)
 			return (ft_puterror_nofile(cmd->args[1]));
 	}
 	else
-		return (ft_special_cd(sh->env, cmd->args[1]));
+		return (ft_special_cd(sh, cmd->args[1]));
 }
 
-void	ft_relative_path(char **environ, char *path, int i)
+void	ft_relative_path(t_sh *sh, char *path, int i)
 {
 	char	**pathes;
 	int		j;
@@ -51,49 +51,73 @@ void	ft_relative_path(char **environ, char *path, int i)
 	while (pathes[++j])
 	{
 		if (!ft_strcmp(pathes[j], ".."))
-			environ[i] = ft_strsub_rchr(environ[i], '/');
+			sh->env[i] = ft_strsub_rchr(sh->env[i], '/');
 		else
-			environ[i] = ft_strjoin(ft_strjoin(environ[i], "/"), pathes[j]);
+			sh->env[i] = ft_strjoin(ft_strjoin(sh->env[i], "/"), pathes[j]);
 	}
+	sh->pwd = sh->env[i];
 }
 
-int		ft_update_env(char **environ, char *path)
+int		ft_update_env(t_sh *sh, char *path)
 {
 	int		i;
 	int		k;
 
-	i = ft_getenv_id(environ, "PWD", 3);
-	k = ft_getenv_id(environ, "OLDPWD", 6);
-	environ[k] = ft_strjoin("OLDPWD=", environ[i] + 4);
-	if (!ft_strcmp(environ[i] + 4, "/"))
+	i = ft_getenv_id(sh->env, "PWD", 3);
+	k = ft_getenv_id(sh->env, "OLDPWD", 6);
+	if (sh->env[k] == NULL)
+	{
+		sh->env[k] = ft_strdup(sh->oldpwd);
+		sh->env[k + 1] = 0;
+	}
+	i = (i == k) ? i + 1 : i;
+	if (sh->env[i] == NULL)
+	{
+		sh->env[i] = ft_strdup(sh->pwd);
+		sh->env[i + 1] = 0;
+	}
+	sh->env[k] = ft_strjoin("OLDPWD=", sh->env[i] + 4);
+	sh->oldpwd = sh->env[k];
+	if (!ft_strcmp(sh->env[i] + 4, "/"))
 		return (0);
 	if (path[0] == '/')
-		environ[i] = ft_strjoin("PWD=", path);
+	{
+		sh->env[i] = ft_strjoin("PWD=", path);
+		sh->pwd = sh->env[i];
+	}
 	else
-		ft_relative_path(environ, path, i);
+		ft_relative_path(sh, path, i);
 	return (0);
 }
 
-int		ft_special_cd(char **environ, char *spec)
+int		ft_special_cd(t_sh *sh, char *spec)
 {
 	int		i;
 	int		j;
 
-	i = 0;
-	j = 0;
-	while ((ft_strncmp(environ[i], "HOME", 4)))
-		i++;
-	while ((ft_strncmp(environ[j], "OLDPWD", 6)))
-		j++;
+	i = ft_getenv_id(sh->env, "HOME", 4);
+	j = ft_getenv_id(sh->env, "OLDPWD", 6);
+	if (sh->env[j] == NULL)
+	{
+		sh->env[j] = ft_strdup(sh->oldpwd);
+		sh->env[j + 1] = 0;
+	}
+	i = (i == j) ? i + 1 : i;
+	if (sh->env[i] == NULL)
+	{
+		sh->env[i] = ft_strdup(sh->home);
+		sh->env[i + 1] = 0;
+	}
+	ft_putchar('a');
 	if (spec == NULL || !ft_strcmp(spec, "~"))
 	{
-		chdir(environ[i] + 5);
-		ft_update_env(environ, environ[i] + 5);
+		chdir(sh->env[i] + 5);
+		ft_update_env(sh, sh->env[i] + 5);
 	}
 	else
 	{
-		chdir(environ[j] + 7);
-		ft_update_env(environ, environ[j] + 7);
+		chdir(sh->env[j] + 7);
+		ft_update_env(sh, sh->env[j] + 7);
 	}
 	return (0);
 }
@@ -103,7 +127,7 @@ int		ft_getenv_id(char **environ, char *str, int size)
 	int		i;
 
 	i = 0;
-	while ((ft_strncmp(environ[i], str, size)))
+	while (environ[i] && (ft_strncmp(environ[i], str, size)))
 		i++;
 	return (i);
 }

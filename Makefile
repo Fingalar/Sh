@@ -6,10 +6,10 @@
 #    By: cmaublan <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/02/27 12:38:23 by cmaublan          #+#    #+#              #
-#    Updated: 2014/05/12 15:22:05 by tmertz           ###   ########.fr        #
+#    Updated: 2014/05/27 15:26:02 by tmertz           ###   ########.fr        #
 #******************************************************************************#
 
-NAME = ft_minishell2
+NAME = 42sh
 
 SRCS = main.c\
 	ft_env.c\
@@ -21,7 +21,6 @@ SRCS = main.c\
 	parser.c\
 	parser2.c\
 	parsing_tools.c\
-	sh_struct.c\
 	grammar.c\
 	grammar2.c\
 	grammar3.c\
@@ -45,7 +44,16 @@ SRCS = main.c\
 	config.c\
 	cd.c\
 	newcard.c\
-	match.c
+	match.c\
+	singleton.c\
+	ft_env2.c \
+	read_main.c \
+	read_args.c \
+	read_flags.c \
+	read_line.c \
+	ft_exec_main.c \
+	ft_exec_check.c \
+	ft_exec_add.c
 
 V = 1
 
@@ -78,7 +86,7 @@ all: $(NAME)
 $(NAME): $(OBJS)
 	@echo "$(U)$(C)[LINKING: \033[1;31m$<\033[A\033[0m"
 	@echo "\033[0;32m"
-	$(CC) -o $(NAME) $(OBJS) $(CFLAGS) $(INCLUDES_C)
+	$(CC) -o $(NAME) $(OBJS) $(CFLAGS) $(INCLUDES_C) -g3
 	@echo "\033[1;31m [.working.]"
 	@echo "$(SKIP)\033[2K\033[A\033[2K$(SKIP)"
 

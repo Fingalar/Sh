@@ -6,7 +6,7 @@
 /*   By: tmertz <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/02/26 16:24:17 by tmertz            #+#    #+#             */
-/*   Updated: 2014/05/23 17:44:42 by tmertz           ###   ########.fr       */
+/*   Updated: 2014/05/27 15:20:07 by tmertz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,26 @@ t_elem		*ft_find_highest_priority(t_list *tokens, int priority)
 	return (elem);
 }
 
+void		ft_add_redirections_to_tree(t_tree *tree, t_list *tokens
+									, t_node *node, t_elem *elem)
+{
+	t_list		*list_l;
+	t_list		*list_r;
+
+	ft_add_redirection_node(node, elem->next);
+	ft_list_delone(tokens, elem->next);
+	if (elem->previous)
+	{
+		list_l = ft_sh_split_list_l(elem->previous, tokens);
+		ft_parser_make_tree(tree, list_l, node, 0);
+	}
+	if (elem->next)
+	{
+		list_r = ft_sh_split_list_r(elem->next, tokens);
+		ft_parser_make_tree(tree, list_r, node, 0);
+	}
+}
+
 void		ft_add_others_to_tree(t_tree *tree, t_list *tokens
 									, t_node *node, int dir)
 {
@@ -44,19 +64,19 @@ void		ft_add_others_to_tree(t_tree *tree, t_list *tokens
 	else
 		node = ft_add_node(node, elem, dir);
 	if (((t_token *)elem->value)->type == 2)
+		ft_add_redirections_to_tree(tree, tokens, node, elem);
+	else
 	{
-		ft_add_redirection_node(node, elem->next, 1);
-		ft_list_delone(tokens, elem->next);
-	}
-	if (elem->previous)
-	{
-		list_l = ft_sh_split_list_l(elem->previous, tokens);
-		ft_parser_make_tree(tree, list_l, node, 0);
-	}
-	if (elem->next)
-	{
-		list_r = ft_sh_split_list_r(elem->next, tokens);
-		ft_parser_make_tree(tree, list_r, node, 1);
+		if (elem->previous)
+		{
+			list_l = ft_sh_split_list_l(elem->previous, tokens);
+			ft_parser_make_tree(tree, list_l, node, 0);
+		}
+		if (elem->next)
+		{
+			list_r = ft_sh_split_list_r(elem->next, tokens);
+			ft_parser_make_tree(tree, list_r, node, 1);
+		}
 	}
 }
 
@@ -75,22 +95,6 @@ void		ft_add_cmd_to_tree(t_tree *tree, t_list *tokens,
 		ft_add_node(node, tokens->first, dir);
 	else
 		ft_add_cmd_node(node, ft_create_cmd(tokens), dir);
-}
-
-t_tree		*ft_parser_make_tree(t_tree *tree, t_list *tokens,
-		t_node *node, int dir)
-{
-	t_elem		*elem;
-
-	elem = ft_find_highest_priority(tokens, 5);
-	if (elem != NULL)
-		ft_add_others_to_tree(tree, tokens, node, dir);
-	else
-	{
-		ft_add_cmd_to_tree(tree, tokens, node, dir);
-		return (tree);
-	}
-	return (tree);
 }
 
 t_cmd		*ft_create_cmd(t_list *tokens)

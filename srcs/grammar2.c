@@ -6,7 +6,7 @@
 /*   By: jburet <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/27 18:36:06 by jburet            #+#    #+#             */
-/*   Updated: 2014/03/27 18:52:49 by jburet           ###   ########.fr       */
+/*   Updated: 2014/05/26 18:38:18 by tmertz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ int			ft_grammar_pipes(t_elem *cur, int *status
 		return (ft_anbiguous_redirect_out());
 	if (*redir_i >= 1)
 		return (ft_anbiguous_redirect_in());
+	*redir_o = 0;
+	*redir_i = 0;
 	return (0);
 }
 

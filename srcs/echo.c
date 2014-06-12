@@ -6,7 +6,7 @@
 /*   By: tmertz <tmertz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/18 14:25:02 by tmertz            #+#    #+#             */
-/*   Updated: 2014/03/27 22:45:47 by jburet           ###   ########.fr       */
+/*   Updated: 2014/06/06 16:32:38 by cmaublan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ int			ft_echo(t_cmd *cmd)
 	flag = 0;
 	i = 0;
 	if (cmd->args[1] && cmd->args[1][0] == '-')
-		i = (cmd->args[1][1] == 'n') ? ++flag + 1 : i;
-	else if (cmd->args[1])
+		i = (cmd->args[1][1] == 'n') ? ++flag : i;
+	if (cmd->args[1])
 	{
 		while (cmd->args[++i] && (j = -1))
 		{

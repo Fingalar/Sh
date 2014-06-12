@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmertz <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: nyguel <nyguel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/02/25 14:07:08 by tmertz            #+#    #+#             */
-/*   Updated: 2014/03/27 22:38:50 by jburet           ###   ########.fr       */
+/*   Updated: 2014/06/12 18:49:11 by tmertz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "../includes/lexing_tools.h"
 #include "../includes/error_messages.h"
 
-t_list		*ft_lexer(char *line)
+t_list		*ft_lexer(char *line, t_sh *sh)
 {
 	int		i;
 	t_list	*tokens;
@@ -36,18 +36,65 @@ t_list		*ft_lexer(char *line)
 		else if (ft_isoperator(line[i]))
 			i = ft_check_operator(tokens, line, i);
 		else
-			i = ft_add_word(tokens, line, i);
+			i = ft_add_word(tokens, line, i, sh);
 		if (i == -1)
 			return (NULL);
 	}
 	return (tokens);
 }
 
-void		quoted_word(t_word *w, char *line, int *i)
+int			check_if_variable(t_word **w, char *line, int *i, t_sh *sh)
+{
+	char	*var;
+	int		j;
+	int		k;
+	t_elem	*vars;
+
+	*i = *i + 1;
+	var = ft_memalloc(sizeof(char) * (ft_strlen(line) - *i + 1));
+	j = 0;
+	k = 0;
+	while (line[*i] && ft_isletter(line[*i]) && line[*i] != '"'
+			&& line[*i] != '\'')
+		var[j++] = line[(*i)++];
+	(*w)->var = ft_strdup(var);
+	while (sh->env[k])
+	{
+		if (!ft_strncmp(var, sh->env[k], ft_strlen(var)))
+		{
+			(*w)->var = ft_strdup(sh->env[k] + (ft_strlen(var) + 1));
+			return (1);
+		}
+		k++;
+	}
+	vars = sh->var->first;
+	while (vars)
+	{
+		if (!ft_strcmp(var, ((t_var *)vars->value)->name))
+		{
+			(*w)->var = ft_strdup(var);
+			return (1);
+		}
+		vars = vars->next;
+	}
+	return (0);
+}
+
+void		quoted_word(t_word *w, char *line, int *i, t_sh *sh)
 {
 	while (line[*i] != '\0' && w->status == 1)
 	{
-		if (line[*i] == '\\' && line[*i + 1] && line[*i + 1] == w->quote)
+		if (line[*i] == '$' && w->quote == '"')
+		{
+			if (check_if_variable(&w, line, i, sh))
+				w->result = ft_strjoin(w->result, w->var);
+			else
+			{
+				ft_putstr_fd(w->var, 2);
+				ft_putstr_fd(": Undefined Variable", 2);
+			}
+		}
+		else if (line[*i] == '\\' && line[*i + 1] && line[*i + 1] == w->quote)
 		{
 			w->result[w->k++] = line[*i + 1];
 			*i += 2;
@@ -62,11 +109,21 @@ void		quoted_word(t_word *w, char *line, int *i)
 	}
 }
 
-void		simple_word(t_word *w, char *line, int *i)
+void		simple_word(t_word *w, char *line, int *i, t_sh *sh)
 {
 	while (ft_isletter(line[*i]) && w->status == 0)
 	{
-		if (line[*i] == '\\' && line[*i + 1])
+		if (line[*i] == '$')
+		{
+			if (check_if_variable(&w, line, i, sh))
+				w->result = ft_strjoin(w->result, w->var);
+			else
+			{
+				ft_putstr_fd(w->var, 2);
+				ft_putstr_fd(": Undefined Variable", 2);
+			}
+		}
+		else if (line[*i] == '\\' && line[*i + 1])
 		{
 			w->result[w->k++] = line[*i + 1];
 			*i += 2;
@@ -81,7 +138,7 @@ void		simple_word(t_word *w, char *line, int *i)
 	}
 }
 
-int			ft_add_word(t_list *tokens, char *line, int i)
+int			ft_add_word(t_list *tokens, char *line, int i, t_sh *sh)
 {
 	t_word	w;
 	int		j;
@@ -100,9 +157,9 @@ int			ft_add_word(t_list *tokens, char *line, int i)
 		&& (ft_isletter(line[i]) || w.status == 1))
 	{
 		if (w.status == 1)
-			quoted_word(&w, line, &i);
+			quoted_word(&w, line, &i, sh);
 		else if (w.status == 0)
-			simple_word(&w, line, &i);
+			simple_word(&w, line, &i, sh);
 	}
 	if (w.status == 1)
 		return (ft_unmatched_quote(w.quote));

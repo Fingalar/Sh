@@ -6,7 +6,7 @@
 /*   By: tmertz <tmertz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/16 14:31:52 by tmertz            #+#    #+#             */
-/*   Updated: 2014/05/17 17:19:55 by tmertz           ###   ########.fr       */
+/*   Updated: 2014/06/02 16:08:17 by tmertz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ int		ft_make_redir(t_node *node, t_sh *sh)
 	if (process == 0)
 	{
 		fd = ft_wich_redir(node);
+		if (fd == -1)
+			exit(1);
 		exit(g_solve_tree[L_PRIORITY](node->left, sh));
 		close(fd);
 	}

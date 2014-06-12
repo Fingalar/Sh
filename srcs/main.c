@@ -6,7 +6,7 @@
 /*   By: cmaublan <cmaublan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/02/24 19:34:49 by cmaublan          #+#    #+#             */
-/*   Updated: 2014/05/23 17:32:26 by tmertz           ###   ########.fr       */
+/*   Updated: 2014/06/12 16:34:18 by tmertz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ char		*ft_sendline(char *line, int *i, t_sh *sh)
 	tree = NULL;
 	line[ft_strlen(line)] = '\0';
 	ft_putchar('\n');
-	list = ft_lexer(line);
+	list = ft_lexer(line, sh);
 	if (list != NULL && list->size != 0)
 	{
 		save_cmd(line, sh);
@@ -99,7 +99,7 @@ int			ft_exec_args(char *line, t_sh *sh)
 	t_list	*list;
 	t_tree	*tree;
 
-	list = ft_lexer(line);
+	list = ft_lexer(line, sh);
 	if (list != NULL && list->size != 0)
 	{
 		if (ft_grammar(list))

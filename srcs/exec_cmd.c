@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tmertz <tmertz@student.42.fr>              +#+  +:+       +#+        */
+/*   By: nyguel <nyguel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/13 16:10:00 by tmertz            #+#    #+#             */
-/*   Updated: 2014/05/23 18:24:11 by tmertz           ###   ########.fr       */
+/*   Updated: 2014/06/04 18:44:46 by nyguel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,19 @@ int		ft_check_if_builltin(char *cmd)
 		return (5);
 	if (!ft_strcmp(cmd, "echo"))
 		return (6);
+	if (!ft_strcmp(cmd, "read"))
+		return (7);
+	if (!ft_strcmp(cmd, "exec"))
+		return (8);
 	return (0);
 }
 
 int		ft_exec_builltin(t_cmd *cmd, t_sh *sh, int nbr)
 {
+	if (nbr == 8)
+		return (ft_exec(cmd, sh));
+	if (nbr == 7)
+		return (ft_read(cmd, sh));
 	if (nbr == 6)
 		return (ft_echo(cmd));
 	if (nbr == 2)

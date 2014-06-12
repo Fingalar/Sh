@@ -6,7 +6,7 @@
 /*   By: jburet <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/27 18:55:18 by jburet            #+#    #+#             */
-/*   Updated: 2014/05/23 17:42:58 by tmertz           ###   ########.fr       */
+/*   Updated: 2014/05/27 15:18:37 by tmertz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,28 @@
 t_tree		*ft_parser(t_list *tokens)
 {
 	t_tree		*tree;
-	t_elem		*elem;
 
 	tree = NULL;
-	elem = tokens->first;
-	while (elem != NULL)
-	{
-		ft_putendl(((t_token *)elem->value)->lexen);
-		elem =elem->next;
-	}
 	tree = ft_tree_init(tree);
 	if (!ft_grammar(tokens))
 		return (NULL);
 	tree = ft_parser_make_tree(tree, tokens, NULL, 0);
-	ft_print_tree(tree->root, 0);
+	return (tree);
+}
+
+t_tree		*ft_parser_make_tree(t_tree *tree, t_list *tokens,
+		t_node *node, int dir)
+{
+	t_elem		*elem;
+
+	elem = ft_find_highest_priority(tokens, 5);
+	if (elem != NULL)
+		ft_add_others_to_tree(tree, tokens, node, dir);
+	else
+	{
+		ft_add_cmd_to_tree(tree, tokens, node, dir);
+		return (tree);
+	}
 	return (tree);
 }
 
