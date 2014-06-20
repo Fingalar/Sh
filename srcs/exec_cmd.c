@@ -6,7 +6,7 @@
 /*   By: nyguel <nyguel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/13 16:10:00 by tmertz            #+#    #+#             */
-/*   Updated: 2014/06/04 18:44:46 by nyguel           ###   ########.fr       */
+/*   Updated: 2014/06/20 16:48:24 by tmertz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ int		ft_check_if_builltin(char *cmd)
 		return (2);
 	if (!ft_strcmp(cmd, "env"))
 		return (3);
-	if (!ft_strcmp(cmd, "setenv"))
+	if (!ft_strcmp(cmd, "setenv") || !ft_strcmp(cmd, "import"))
 		return (4);
-	if (!ft_strcmp(cmd, "unsetenv"))
+	if (!ft_strcmp(cmd, "unsetenv") || !ft_strcmp(cmd, "export"))
 		return (5);
 	if (!ft_strcmp(cmd, "echo"))
 		return (6);
@@ -82,9 +82,9 @@ int		ft_check_cmd(t_node *node, t_sh *sh)
 	t_cmd	*cmd;
 	int		nbr;
 
-	path = NULL;
 	cmd = (t_cmd *)node->value;
-	cmd->cmd = alias(sh, cmd->cmd);
+	if (ft_strchr(((t_cmd *)node->value)->cmd, '='))
+		return (assign_variable(sh, node));
 	if ((nbr = ft_check_if_builltin(cmd->cmd)) != 0)
 		return (ft_exec_builltin(cmd, sh, nbr));
 	if (ft_strchr(cmd->cmd, '/') != NULL)

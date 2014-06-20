@@ -6,7 +6,7 @@
 /*   By: tmertz <tmertz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/27 02:01:53 by tmertz            #+#    #+#             */
-/*   Updated: 2014/05/27 15:45:40 by tmertz           ###   ########.fr       */
+/*   Updated: 2014/06/20 16:42:12 by tmertz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,22 @@ void	ft_relative_path(t_sh *sh, char *path, int i)
 {
 	char	**pathes;
 	int		j;
+	int		k;
 
 	j = -1;
+	k = ft_getenv_id(sh->env, "HOME", 4);
 	pathes = ft_strsplit(path, '/');
-	while (pathes[++j])
+	if (path[0] == '~')
+		sh->env[i] = ft_strjoin("PWD=", sh->env[k]);
+	else
 	{
-		if (!ft_strcmp(pathes[j], ".."))
-			sh->env[i] = ft_strsub_rchr(sh->env[i], '/');
-		else
-			sh->env[i] = ft_strjoin(ft_strjoin(sh->env[i], "/"), pathes[j]);
+		while (pathes[++j])
+		{
+			if (!ft_strcmp(pathes[j], ".."))
+				sh->env[i] = ft_strsub_rchr(sh->env[i], '/');
+			else
+				sh->env[i] = ft_strjoin(ft_strjoin(sh->env[i], "/"), pathes[j]);
+		}
 	}
 	sh->pwd = sh->env[i];
 }
@@ -65,25 +72,15 @@ int		ft_update_env(t_sh *sh, char *path)
 
 	i = ft_getenv_id(sh->env, "PWD", 3);
 	k = ft_getenv_id(sh->env, "OLDPWD", 6);
-	if (sh->env[k] == NULL)
-	{
-		sh->env[k] = ft_strdup(sh->oldpwd);
-		sh->env[k + 1] = 0;
-	}
-	i = (i == k) ? i + 1 : i;
-	if (sh->env[i] == NULL)
-	{
-		sh->env[i] = ft_strdup(sh->pwd);
-		sh->env[i + 1] = 0;
-	}
+	i = check_if_nullvar1(sh, i, k);
 	sh->env[k] = ft_strjoin("OLDPWD=", sh->env[i] + 4);
-	sh->oldpwd = sh->env[k];
-	if (!ft_strcmp(sh->env[i] + 4, "/"))
+	sh->oldpwd = ft_strdup(sh->env[k]);
+	if (!ft_strcmp(sh->env[i] + 4, "/") && !ft_strncmp(path, "..", 2))
 		return (0);
 	if (path[0] == '/')
 	{
 		sh->env[i] = ft_strjoin("PWD=", path);
-		sh->pwd = sh->env[i];
+		sh->pwd = ft_strdup(sh->env[i]);
 	}
 	else
 		ft_relative_path(sh, path, i);
@@ -97,18 +94,7 @@ int		ft_special_cd(t_sh *sh, char *spec)
 
 	i = ft_getenv_id(sh->env, "HOME", 4);
 	j = ft_getenv_id(sh->env, "OLDPWD", 6);
-	if (sh->env[j] == NULL)
-	{
-		sh->env[j] = ft_strdup(sh->oldpwd);
-		sh->env[j + 1] = 0;
-	}
-	i = (i == j) ? i + 1 : i;
-	if (sh->env[i] == NULL)
-	{
-		sh->env[i] = ft_strdup(sh->home);
-		sh->env[i + 1] = 0;
-	}
-	ft_putchar('a');
+	i = check_if_nullvar2(sh, i, j);
 	if (spec == NULL || !ft_strcmp(spec, "~"))
 	{
 		chdir(sh->env[i] + 5);

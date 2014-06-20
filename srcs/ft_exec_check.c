@@ -6,12 +6,14 @@
 /*   By: nyguel <nyguel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/06/06 20:17:50 by nyguel            #+#    #+#             */
-/*   Updated: 2014/06/06 21:10:19 by nyguel           ###   ########.fr       */
+/*   Updated: 2014/06/20 16:51:45 by tmertz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/builtin_exec.h"
 #include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 static int	ft_check_fd(char *line, int *i, t_ex *ex)
 {
@@ -58,14 +60,25 @@ static int	ft_check_rights(char *line, int *i, t_ex *ex)
 
 static int	ft_check_path(char *line, int *i, t_ex *ex)
 {
-	
-	//JOB TO DO!!!!!!!!!!!!!!!!!
+	int		test;
 
+	test = 0;
 	if (line[*i])
 	{
 		free(ex->path);
 		ex->path = ft_strdup(&line[*i]);
-		return (0);
+		if (access(ex->path, F_OK) != -1)
+		{
+			if (ex->rights == 1 && access(ex->path, W_OK) != -1)
+				ex->r_fd = open(ex->path, O_WRONLY);
+			else if (ex->rights == 2 && access(ex->path, R_OK) != -1)
+				ex->r_fd = open(ex->path, O_RDONLY);
+			else if (ex->rights == 3 && access(ex->path, R_OK | W_OK) != -1)
+				ex->r_fd = open(ex->path, O_RDWR);
+			else
+				return (3);
+			return (0);
+		}
 	}
 	return (3);
 }

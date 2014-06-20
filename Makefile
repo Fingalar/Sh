@@ -6,7 +6,7 @@
 #    By: cmaublan <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/02/27 12:38:23 by cmaublan          #+#    #+#              #
-#    Updated: 2014/05/27 15:26:02 by tmertz           ###   ########.fr        #
+#    Updated: 2014/06/20 16:40:39 by tmertz           ###   ########.fr        #
 #******************************************************************************#
 
 NAME = 42sh
@@ -53,7 +53,10 @@ SRCS = main.c\
 	read_line.c \
 	ft_exec_main.c \
 	ft_exec_check.c \
-	ft_exec_add.c
+	ft_exec_add.c\
+	add_var.c\
+	lexer_var.c\
+	cd2.c
 
 V = 1
 

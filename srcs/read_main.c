@@ -6,11 +6,12 @@
 /*   By: nyguel <nyguel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/06/03 18:59:21 by nyguel            #+#    #+#             */
-/*   Updated: 2014/06/06 20:51:11 by nyguel           ###   ########.fr       */
+/*   Updated: 2014/06/13 20:39:02 by nyguel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/read.h"
+#include "../includes/add_var.h"
 #include <stdlib.h>
 #define ERR "read: usage -[se], -u <fd>, -k <nb>, -d <nb>, -t <nb>, -a <name>"
 
@@ -51,6 +52,14 @@ static void		ft_error(int i)
 	ft_putendl_fd(ERR, 2);
 }
 
+static void		ft_treat_read(t_read *opt, t_sh *sh)
+{
+	if (opt->var_arr == NULL)
+		add_var_to_env(sh, opt->var_line, ft_strdup(opt->line), 0);
+	else
+		add_var_to_env(sh, opt->var_line, ft_strsplit(opt->line, ' '), 1);
+}
+
 int				ft_read(t_cmd *cmd, t_sh *sh)
 {
 	int		test;
@@ -59,10 +68,11 @@ int				ft_read(t_cmd *cmd, t_sh *sh)
 	opt = ft_init_opt();
 	test = ft_check_args(&cmd->args[1], opt, sh);
 	if (test == 0)
-		test = ft_read_line(opt, sh);
+		test = ft_read_line(opt);
 	if (test != 0)
 		ft_error(test);
+	else
+		ft_treat_read(opt, sh);
 	ft_free_opt(opt);
 	return (test);
-	(void)sh;
 }

@@ -6,24 +6,21 @@
 /*   By: nyguel <nyguel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/27 04:59:20 by tmertz            #+#    #+#             */
-/*   Updated: 2014/06/12 19:20:06 by tmertz           ###   ########.fr       */
+/*   Updated: 2014/06/20 16:45:37 by tmertz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCTS_H
 # define STRUCTS_H
 # include "../libft/libft.h"
+# include <sys/time.h>
 
 typedef struct		s_var
 {
-	void			*var;
+	void			*value;
 	int				array;
 	char			*name;
 }					t_var;
-
-//t_elem *elem = sh->var->first;
-//elem = elem->next;
-//((t_var *)elem->value)->var = tab;
 
 typedef struct		s_hist
 {
@@ -89,5 +86,11 @@ typedef struct		s_ex
 	int				rights;
 	char			*path;
 }					t_ex;
+
+typedef struct		s_t
+{
+	struct timeval	t1;
+	struct timeval	t2;
+}					t_t;
 
 #endif

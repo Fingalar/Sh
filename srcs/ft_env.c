@@ -6,7 +6,7 @@
 /*   By: nyguel <nyguel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/10 15:19:28 by cmaublan          #+#    #+#             */
-/*   Updated: 2014/06/12 18:01:02 by tmertz           ###   ########.fr       */
+/*   Updated: 2014/06/20 16:51:22 by tmertz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,9 @@ t_sh		*ft_make_sh(t_sh *sh, char **environ)
 	sh->env = (char **)ft_memalloc(sizeof(char *) * (sh->env_size + 1));
 	if (!sh->env)
 		return (NULL);
-	i = 0;
-	while (environ[i] != NULL)
-	{
+	i = -1;
+	while (environ[++i] != NULL)
 		sh->env[i] = ft_strdup(environ[i]);
-		i++;
-	}
 	sh->paths = (t_list **)ft_memalloc(sizeof(t_list *) * SIZE_TABLE + 1);
 	sh->history = recup_hist(sh);
 	sh->var = ft_list_init(sh->var);

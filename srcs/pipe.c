@@ -6,7 +6,7 @@
 /*   By: tmertz <tmertz@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/03/17 13:29:01 by tmertz            #+#    #+#             */
-/*   Updated: 2014/03/27 20:42:45 by jburet           ###   ########.fr       */
+/*   Updated: 2014/06/13 18:08:54 by tmertz           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int			ft_check_pipe(t_node *node, t_sh *sh)
 	i = 1;
 	process = fork();
 	buffer = node;
-	if (process == 0)
+	if (process)
 	{
 		while (node->right && R_PRIORITY == 3)
 		{

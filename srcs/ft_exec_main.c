@@ -6,7 +6,7 @@
 /*   By: nyguel <nyguel@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/06/06 20:16:48 by nyguel            #+#    #+#             */
-/*   Updated: 2014/06/06 21:07:43 by nyguel           ###   ########.fr       */
+/*   Updated: 2014/06/13 20:25:38 by nyguel           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,16 +58,5 @@ int			ft_exec(t_cmd *cmd, t_sh *sh)
 		test = ft_add_fd(ex, sh);
 	ft_free_ex(ex);
 	ft_ex_error(test);
-/*
-**	int		i;
-**	i = -1;
-**	while (++i <= sh->fd[0][0])
-**	{
-**		if (i == 0)
-**			printf("%d fd en stock\n", sh->fd[0][0]);
-**		else
-**			printf("id_fd: %d  r_fd: %d\n", sh->fd[0][i], sh->fd[1][i]);
-**	}
-*/
 	return (test);
 }
